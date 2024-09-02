@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,8 +15,14 @@ namespace G85MultiTerm
     public partial class MainForm : Form
     {
         private Panel selectedPanel;
+        private SplitContainer selectedSplitContainer;
+
+
         private int totalSplits = 0;
         private int selectedPanelIndex = 0;
+
+        private static String PANEL_1 = "Panel_1";
+        private static String PANEL_2 = "Panel_2";
 
 
         private enum SplitOrientation
@@ -98,7 +105,7 @@ namespace G85MultiTerm
             {
                 //Clone current panel
                 Panel clonedPanel = ClonePanelWithEvents(selectedPanel);
-
+                clonedPanel.Tag = PANEL_1;
                 //Remove existing controls on form ( first load )
                 this.Controls.Clear();
 
@@ -109,18 +116,19 @@ namespace G85MultiTerm
                     Dock        = DockStyle.Fill
                 };
 
+
+                splitContainer.SplitterWidth = 1;
                 //splitContainer.Panel1.MouseClick += Panel_1_MouseClick;
                 //splitContainer.Panel2.MouseClick += Panel_2_MouseClick;
 
 
                 //var newPanel1 = CreateNewPanel();
                 var newPanel2 = CreateNewPanel();
+                newPanel2.Tag = PANEL_2;
                 newPanel2.Controls.Add(getNewButton(newPanel2));
 
                 splitContainer.Panel1.Controls.Add(clonedPanel);
                 splitContainer.Panel2.Controls.Add(newPanel2);
-
-
 
                 this.Controls.Add(splitContainer);
 
@@ -135,83 +143,70 @@ namespace G85MultiTerm
 
         private void SplitPanel(SplitOrientation orientation)
         {
+            String tagSelectedPanel = "";
             if (selectedPanel != null)
             {
-                if (IsParentSplitContainer(selectedPanel))
+                tagSelectedPanel = (String)selectedPanel.Tag;
+
+                // 1 - Copio panel actual para luego pegarlo en el nuevo SplitContainer
+                Panel currentPanel = ClonePanelWithEvents((Panel)selectedPanel.Parent);
+                if (currentPanel != null)
                 {
 
-                    // 1 - Copio panel actual para luego pegarlo en el nuevo SplitContainer
-                    Panel currentPanel = ClonePanelWithEvents((Panel)selectedPanel.Parent.Controls[0]);
-                    if (currentPanel != null)
+                    //Accedo al actual splitContainer
+
+                    SplitContainer newSplitContainer = new SplitContainer
                     {
+                        Orientation = (orientation == SplitOrientation.Vertical) ? Orientation.Vertical : Orientation.Horizontal,
+                        Dock = DockStyle.Fill
+                    };
+                    newSplitContainer.SplitterWidth = 1;
 
-                        //Accedo al actual splitContainer
-                        SplitContainer currentSplitContainer = (SplitContainer)selectedPanel.Parent.Parent;
-                        if (currentSplitContainer != null)
-                        {
-                            //Accedo al padre del actual Panel , que puede ser PAnel1 o Panel2 dentro del actual Split Container
-                            if (IsSplitPanel(selectedPanel))
-                            {
-
-                                //Una vez dentro accedo a el ( Panel1 o PAnel2) y borro su contenido.
-                                
-                                //selectedPanel.Parent.Controls.Clear();
-
-                                //Creo un nuevo SplitContainer
-                                SplitContainer newSplitContainer = new SplitContainer
-                                {
-                                    Orientation = (orientation == SplitOrientation.Vertical) ? Orientation.Vertical : Orientation.Horizontal,
-                                    Dock = DockStyle.Fill
-                                };
-
-                                //y le meto el panel que estaba
-                                newSplitContainer.Panel1.Controls.Add(currentPanel);
-
-                                //Creo un nuevo panel que será nuevo , con un nuevo boton
-                                var newPanel2 = CreateNewPanel();
-                                newPanel2.MouseClick += Panel_MouseClick;
-                                newPanel2.Controls.Add(getNewButton(newPanel2));
-
-                                //En el panel2 le meto el nuevo panel
-                                newSplitContainer.Panel2.Controls.Add(newPanel2);
-
-                                //y en el panel que estabamos, pues meto un nuevo SplitContainer
-                                selectedPanel.Parent.Controls.Add(newSplitContainer);
-
-                                int a = 1;
-                            }
-
-                            //En el actual split container accedo al panel seleccionado y lo vacio
-
-
-                            /*
-                            //Elimino el contenido del panel actual
-                            selectedPanel.Controls.Clear();
-                            SplitContainer newSplitContainer = new SplitContainer
-                            {
-                                Orientation = (orientation == SplitOrientation.Vertical) ? Orientation.Vertical : Orientation.Horizontal,
-                                Dock = DockStyle.Fill
-                            };
-
-                            newSplitContainer.Panel1.Controls.Add(currentPanel);
-                            var newPanel2 = CreateNewPanel();
-                            //newPanel2.MouseClick += Panel_MouseClick;
-                            newPanel2.Controls.Add(getNewButton(newPanel2));
-                            */
-
-                            //currentPanel.Controls.Add(newSplitContainer);
-                            //currentSplitContainer.Panel1.Controls.Add(newSplitContainer);
-                            //newSplitContainer.Panel2.Controls.Add(newPanel2);
-
-                        }
-                    
+                    //Accedo al padre del actual Panel , que puede ser PAnel1 o Panel2 dentro del actual Split Container
+                    if (tagSelectedPanel.Equals(PANEL_1))
+                    {
+                        //y le meto el panel que estaba
+                        newSplitContainer.Panel1.Controls.Add(currentPanel);
+                        
+                        selectedSplitContainer.Panel1.Controls.Clear();
+                        selectedSplitContainer.Panel1.Controls.Add(newSplitContainer);
                     }
-                }
-                else
-                {
-                    int b = 0;
-                }
+                    else if (tagSelectedPanel.Equals(PANEL_2))
+                    {
+                        //vaciamos el panel seleccionado
+                        selectedSplitContainer.Panel2.Controls.Clear();
+
+                        //metemos en el nuevo splitContainer, lo que habia seleccionado en el panel1
+                        newSplitContainer.Panel1.Controls.Add(currentPanel.Controls[0]);
+
+                        //En el splitContainer nuevo , en el panel2 , metemos lo nuevo
+                        totalSplits++;
+                        newSplitContainer.Panel2.Controls.Add(getNewButton(newSplitContainer.Panel2));
+
+
+
+
+                        //En el panel elegido  en este caso el 2 , metemos el nuevo splitContainer
+                        selectedSplitContainer.Panel2.Controls.Add(newSplitContainer);
+
+                        //newSplitContainer.Panel1.Controls.Add(currentPanel);
+                        //selectedSplitContainer.Panel1.Controls.Clear();
+                        //selectedSplitContainer.Panel1.Controls.Add(currentPanel);
+
+
+                        //newSplitContainer.Panel1.Controls.Add(currentPanel);
+                        //var newPanel2 = CreateNewPanel();
+                        //newPanel2.MouseClick += Panel_MouseClick;
+                        //newPanel2.Controls.Add(getNewButton(newPanel2));
+
+                        //En el panel2 le meto el nuevo panel
+                        //newSplitContainer.Panel2.Controls.Add(newPanel2);
+                        //selectedSplitContainer.Panel2.Controls.Clear();
+                        //selectedSplitContainer.Panel2.Controls.Add(newSplitContainer);
+
+                    }
                 
+                }
             }
         }
 
@@ -356,26 +351,17 @@ namespace G85MultiTerm
 
         private void Panel_MouseClick(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("Click in panel");
+            
             selectedPanel = sender as Panel;
+
+            selectedSplitContainer = selectedPanel.Parent.Parent as SplitContainer;
+            int a = 1;
+
+            Debug.WriteLine("Click in panel TAG : " + selectedPanel.Tag);
 
         }
 
-        private void Panel_1_MouseClick(object sender, MouseEventArgs e)
-        {
-            Debug.WriteLine("Click in panel 111");
-            selectedPanel = sender as Panel;
-            selectedPanelIndex = 1;
-
-        }
-
-        private void Panel_2_MouseClick(object sender, MouseEventArgs e)
-        {
-            Debug.WriteLine("Click in panel 222");
-            selectedPanel = sender as Panel;
-            selectedPanelIndex = 2;
-
-        }
+  
 
 
     }
