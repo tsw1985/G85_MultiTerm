@@ -51,6 +51,9 @@ namespace G85MultiTerm
                 Dock = DockStyle.Fill,
                 SplitterWidth = 5
             };
+            splitContainer.Tag = "P_" + Convert.ToString(totalButtons);
+
+
 
             // Mover el contenido del panel seleccionado al Panel1 del SplitContainer
             Control parent = selectedPanel.Parent;
@@ -72,25 +75,28 @@ namespace G85MultiTerm
         {
             if (selectedPanel == null) return;
 
-            SplitContainer parentSplitContainer = selectedPanel.Parent.Parent as SplitContainer;
-            if (parentSplitContainer == null) return;
+            SplitContainer splitContainerOfSelectedPanel = selectedPanel.Parent.Parent as SplitContainer;
+            if (splitContainerOfSelectedPanel == null) return;
 
-            Control siblingPanel;
-            if (selectedPanel.Parent == parentSplitContainer.Panel1)
+            Control panelToKeep;
+            if (selectedPanel.Parent == splitContainerOfSelectedPanel.Panel1)
             {
-                siblingPanel = parentSplitContainer.Panel2.Controls[0];
+                panelToKeep = splitContainerOfSelectedPanel.Panel2.Controls[0];
             }
             else
             {
-                siblingPanel = parentSplitContainer.Panel1.Controls[0];
+                panelToKeep = splitContainerOfSelectedPanel.Panel1.Controls[0];
             }
 
-            Control parent = parentSplitContainer.Parent;
-            parent.Controls.Clear();
-            siblingPanel.Dock = DockStyle.Fill;
-            parent.Controls.Add(siblingPanel);
+            //We access to the Parent Panel of the splitContainer
+            Control parentOfsplitContainerOfSelectedPanel = splitContainerOfSelectedPanel.Parent;
 
-            selectedPanel = siblingPanel as Panel;
+            //Remove the SplitContainer into this panel.
+            parentOfsplitContainerOfSelectedPanel.Controls.Clear();
+            panelToKeep.Dock = DockStyle.Fill;
+            parentOfsplitContainerOfSelectedPanel.Controls.Add(panelToKeep);
+
+            selectedPanel = panelToKeep as Panel;
         }
 
         private Panel CreateNewPanel()
