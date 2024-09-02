@@ -177,11 +177,19 @@ namespace G85MultiTerm
                         selectedSplitContainer.Panel2.Controls.Clear();
 
                         //metemos en el nuevo splitContainer, lo que habia seleccionado en el panel1
+                        //currentPanel.Controls[0].MouseClick += Panel_MouseClick;
                         newSplitContainer.Panel1.Controls.Add(currentPanel.Controls[0]);
+                        
 
                         //En el splitContainer nuevo , en el panel2 , metemos lo nuevo
-                        totalSplits++;
-                        newSplitContainer.Panel2.Controls.Add(getNewButton(newSplitContainer.Panel2));
+                        //totalSplits++;
+                        Panel newPanel = new Panel();
+                        newPanel.MouseClick += Panel_MouseClick;
+                        newPanel.Tag = PANEL_2;
+
+
+                        newPanel.Controls.Add(getNewButton(newSplitContainer.Panel2));
+                        newSplitContainer.Panel2.Controls.Add(newPanel);
 
 
 
