@@ -8,6 +8,7 @@ namespace G85MultiTerm
     public partial class MainForm : Form
     {
         private Panel selectedPanel;
+        private int totalButtons;
 
         public MainForm()
         {
@@ -103,9 +104,11 @@ namespace G85MultiTerm
 
             panel.MouseClick += Panel_MouseClick;
 
+            totalButtons++;
             Button initialButton = new Button
             {
-                Text = "Button : " + (Controls.Count + 1),
+
+                Text = "Button : " + Convert.ToString(totalButtons),
                 //Dock = DockStyle.Top
             };
 
