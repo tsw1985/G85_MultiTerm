@@ -62,7 +62,6 @@ namespace G85MultiTerm
             splitContainer.Panel2.Controls.Add(newPanel);
 
             // Agregar el SplitContainer al padre del panel seleccionado
-            parent.Controls.Clear();
             parent.Controls.Add(splitContainer);
 
             // Actualizar la referencia del panel seleccionado
