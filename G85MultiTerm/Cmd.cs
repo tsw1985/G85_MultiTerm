@@ -60,6 +60,7 @@ namespace G85MultiTerm
                 {
                     responseCommandTextBox.Text = "";
                     commandTextBox.Text = "";
+                    InitializeCmdProcess();
                 }
                 else
                 {

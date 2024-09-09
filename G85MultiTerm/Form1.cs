@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,6 +10,7 @@ namespace G85MultiTerm
     {
         private Panel selectedPanel;
         private int totalButtons;
+        private ArrayList cmdList = new ArrayList();
 
         public MainForm()
         {
@@ -34,6 +36,14 @@ namespace G85MultiTerm
             {
                 SplitSelectedPanel(Orientation.Horizontal);
                 return true;
+            }
+            else if (keyData == (Keys.Control | Keys.Shift | Keys.Up)) //arrow up
+            {
+                
+            }
+            else if (keyData == (Keys.Control | Keys.Shift | Keys.Down)) //arrow down
+            {
+
             }
             else if (keyData == (Keys.Control | Keys.Shift | Keys.W))
             {
@@ -123,6 +133,9 @@ namespace G85MultiTerm
             Cmd cmd = new Cmd();
             cmd.Tag = totalButtons;
             cmd.Dock = DockStyle.Fill;
+            cmd.Tag = "cmd_" + Convert.ToString(totalButtons);
+
+            cmdList.Add(totalButtons);
 
             panel.Controls.Add(cmd);
             return panel;
