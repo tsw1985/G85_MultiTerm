@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace G85MultiTerm
@@ -12,10 +13,65 @@ namespace G85MultiTerm
         private SplitContainer splitContainer1;
         private TextBox responseCommandTextBox;
         private TextBox commandTextBox;
+        private Process cmdProcess;
 
         public Cmd()
         {
             InitializeComponent();  // Inicializa los componentes
+            InitializeCmdProcess();
+            
+        }
+
+        private void InitializeCmdProcess()
+        {
+            cmdProcess = new Process();
+            cmdProcess.StartInfo.FileName = "cmd.exe";
+            cmdProcess.StartInfo.RedirectStandardInput = true;
+            cmdProcess.StartInfo.RedirectStandardOutput = true;
+            cmdProcess.StartInfo.RedirectStandardError = true;
+            cmdProcess.StartInfo.UseShellExecute = false;
+            cmdProcess.StartInfo.CreateNoWindow = true;
+            cmdProcess.OutputDataReceived += CmdProcess_OutputDataReceived;
+            cmdProcess.ErrorDataReceived += CmdProcess_OutputDataReceived;
+            cmdProcess.Start();
+            cmdProcess.BeginOutputReadLine();
+            
+        }
+
+        private void CmdProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.Data))
+            {
+                Invoke((MethodInvoker)(() =>
+                {
+                    responseCommandTextBox.AppendText(e.Data + Environment.NewLine);
+                    commandTextBox.Text = "";
+                    commandTextBox.Focus();
+                }));
+            }
+        }
+
+        private void commandTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+
+                if (commandTextBox.Text.ToLower().Equals("cls"))
+                {
+                    responseCommandTextBox.Text = "";
+                    commandTextBox.Text = "";
+                }
+                else
+                {
+                    string command = commandTextBox.Text;
+                    cmdProcess.StandardInput.WriteLine(command);
+                    cmdProcess.StandardInput.Flush();
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+
+                
+            }
         }
 
         private void InitializeComponent()
@@ -32,6 +88,7 @@ namespace G85MultiTerm
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -44,7 +101,7 @@ namespace G85MultiTerm
             // 
             this.splitContainer1.Panel2.Controls.Add(this.commandTextBox);
             this.splitContainer1.Size = new System.Drawing.Size(1343, 642);
-            this.splitContainer1.SplitterDistance = 582;
+            this.splitContainer1.SplitterDistance = 610;
             this.splitContainer1.TabIndex = 0;
             // 
             // responseCommandTextBox
@@ -53,16 +110,17 @@ namespace G85MultiTerm
             this.responseCommandTextBox.Location = new System.Drawing.Point(0, 0);
             this.responseCommandTextBox.Multiline = true;
             this.responseCommandTextBox.Name = "responseCommandTextBox";
-            this.responseCommandTextBox.Size = new System.Drawing.Size(1343, 582);
+            this.responseCommandTextBox.ReadOnly = true;
+            this.responseCommandTextBox.Size = new System.Drawing.Size(1343, 610);
             this.responseCommandTextBox.TabIndex = 0;
             // 
             // commandTextBox
             // 
-            this.commandTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commandTextBox.Location = new System.Drawing.Point(0, 0);
+            this.commandTextBox.Location = new System.Drawing.Point(3, 3);
             this.commandTextBox.Name = "commandTextBox";
-            this.commandTextBox.Size = new System.Drawing.Size(1343, 20);
+            this.commandTextBox.Size = new System.Drawing.Size(1337, 20);
             this.commandTextBox.TabIndex = 0;
+            this.commandTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.commandTextBox_KeyDown);
             // 
             // Cmd
             // 
@@ -78,5 +136,7 @@ namespace G85MultiTerm
             this.ResumeLayout(false);
 
         }
+
+       
     }
 }

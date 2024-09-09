@@ -52,9 +52,12 @@ namespace G85MultiTerm
             {
                 Orientation = orientation,
                 Dock = DockStyle.Fill,
-                SplitterWidth = 5
+                SplitterWidth = 5,
             };
             splitContainer.Tag = "P_" + Convert.ToString(totalButtons);
+            splitContainer.IsSplitterFixed = true;
+            splitContainer.SplitterWidth = 1;
+
 
             // Mover el contenido del panel seleccionado al Panel1 del SplitContainer
             Control parent = selectedPanel.Parent;
