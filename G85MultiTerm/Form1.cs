@@ -13,8 +13,11 @@ namespace G85MultiTerm
         public MainForm()
         {
             InitializeComponent();
+            InitFirstPanel();
+        }
 
-            // Inicializa el primer panel que ocupará toda la ventana
+        private void InitFirstPanel()
+        {
             selectedPanel = CreateNewPanel();
             selectedPanel.Dock = DockStyle.Fill;
             this.Controls.Add(selectedPanel);
@@ -53,8 +56,6 @@ namespace G85MultiTerm
             };
             splitContainer.Tag = "P_" + Convert.ToString(totalButtons);
 
-
-
             // Mover el contenido del panel seleccionado al Panel1 del SplitContainer
             Control parent = selectedPanel.Parent;
             parent.Controls.Clear();
@@ -88,7 +89,7 @@ namespace G85MultiTerm
                 panelToKeep = splitContainerOfSelectedPanel.Panel1.Controls[0];
             }
 
-            //We access to the Parent Panel of the splitContainer
+            //We access to the Parent PANEL of the splitContainer ( can be a SplitContainer , a splitContainer Panel or a WinForm - the first load )
             Control parentOfsplitContainerOfSelectedPanel = splitContainerOfSelectedPanel.Parent;
 
             //Remove the SplitContainer into this panel.
@@ -105,20 +106,22 @@ namespace G85MultiTerm
             {
                 BorderStyle = BorderStyle.FixedSingle,
                 Dock = DockStyle.Fill,
-                //BackColor = Color.Black
+                BackColor = Color.Black
             };
 
             panel.MouseClick += Panel_MouseClick;
 
             totalButtons++;
-            Button initialButton = new Button
+            /*Button initialButton = new Button
             {
-
                 Text = "Button : " + Convert.ToString(totalButtons),
-                //Dock = DockStyle.Top
-            };
+            };*/
 
-            panel.Controls.Add(initialButton);
+            Cmd cmd = new Cmd();
+            cmd.Tag = totalButtons;
+            cmd.Dock = DockStyle.Fill;
+
+            panel.Controls.Add(cmd);
             return panel;
         }
 
