@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace G85MultiTerm
@@ -14,12 +15,20 @@ namespace G85MultiTerm
         private TextBox responseCommandTextBox;
         private TextBox commandTextBox;
         private Process cmdProcess;
+        private int index;
+        private Panel selectedPanel;
 
-        public Cmd()
+        public Cmd(int index , Panel selectedPanel)
         {
             InitializeComponent();  // Inicializa los componentes
             InitializeCmdProcess();
-            
+            this.index = index;
+            this.selectedPanel = selectedPanel;
+        }
+
+        private void responseCommandTextBox_Click(object sender, EventArgs e)
+        {
+            MainForm.selectedPanel = (Panel)this.Parent;
         }
 
         private void InitializeCmdProcess()
@@ -47,6 +56,9 @@ namespace G85MultiTerm
                     responseCommandTextBox.AppendText(e.Data + Environment.NewLine);
                     commandTextBox.Text = "";
                     commandTextBox.Focus();
+
+                    commandTextBox.Text = "CMD N - " + index;
+
                 }));
             }
         }
@@ -112,8 +124,10 @@ namespace G85MultiTerm
             this.responseCommandTextBox.Multiline = true;
             this.responseCommandTextBox.Name = "responseCommandTextBox";
             this.responseCommandTextBox.ReadOnly = true;
+            this.responseCommandTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.responseCommandTextBox.Size = new System.Drawing.Size(1343, 610);
             this.responseCommandTextBox.TabIndex = 0;
+            this.responseCommandTextBox.Click += new System.EventHandler(this.responseCommandTextBox_Click);
             // 
             // commandTextBox
             // 
@@ -138,6 +152,7 @@ namespace G85MultiTerm
 
         }
 
-       
+        
     }
 }
+
