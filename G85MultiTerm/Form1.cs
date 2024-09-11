@@ -11,6 +11,7 @@ namespace G85MultiTerm
         private Panel selectedPanel;
         private int totalButtons;
         private ArrayList cmdList = new ArrayList();
+        private int panelIndex = -1;
 
         public MainForm()
         {
@@ -23,6 +24,7 @@ namespace G85MultiTerm
             selectedPanel = CreateNewPanel();
             selectedPanel.Dock = DockStyle.Fill;
             this.Controls.Add(selectedPanel);
+            panelIndex++;
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -39,11 +41,13 @@ namespace G85MultiTerm
             }
             else if (keyData == (Keys.Control | Keys.Shift | Keys.Up)) //arrow up
             {
-                
+                panelIndex--;
+                SetFocusOnCmd(this , panelIndex);
             }
             else if (keyData == (Keys.Control | Keys.Shift | Keys.Down)) //arrow down
             {
-
+                panelIndex++;
+                SetFocusOnCmd(this ,panelIndex);
             }
             else if (keyData == (Keys.Control | Keys.Shift | Keys.W))
             {
@@ -53,10 +57,73 @@ namespace G85MultiTerm
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+
+        private void SetFocusOnCmd(Control mainWindow , int index)
+        {
+
+            if (mainWindow != null)
+            {
+                foreach(Control child in mainWindow.Controls)
+                {
+                    if (child != null && child is SplitContainer)
+                    {
+
+                        SplitContainer splitcontainerParent = (SplitContainer)child;
+                        if(splitcontainerParent != null)
+                        {
+                            
+
+                            Panel panel1 = splitcontainerParent.Panel1 as Panel;
+                            if (panel1 != null)
+                            {
+
+                                SetFocusOnCmd(panel1, index);
+                                Debug.WriteLine("Split container tag " + splitcontainerParent.Tag);
+
+
+                                if (panel1.Controls[0] != null && panel1.Controls[0].Controls[0] != null)
+                                {
+                                    Cmd cmdChild = panel1.Controls[0].Controls[0] as Cmd;
+                                    if (cmdChild != null)
+                                    {
+                                        Debug.WriteLine("CMD founded in Panel 1 - TAG  : " + cmdChild.Tag);
+                                    }
+                                }
+
+                            }
+
+                            Panel panel2 = splitcontainerParent.Panel2 as Panel;
+                            if (panel2 != null)
+                            {
+
+                                SetFocusOnCmd(panel2, index);
+                                Debug.WriteLine("Split container tag " + splitcontainerParent.Tag);
+
+                                if (panel2.Controls[0] != null && panel2.Controls[0].Controls[0] != null)
+                                {
+                                    Cmd cmdChild = panel2.Controls[0].Controls[0] as Cmd;
+                                    if (cmdChild != null)
+                                    {
+                                        Debug.WriteLine("CMD founded in Panel 2 - TAG  : " + cmdChild.Tag);
+                                    }
+                                }
+
+
+                            }
+
+                        }
+
+                    }
+                    
+                }
+            }
+        }
+
         private void SplitSelectedPanel(Orientation orientation)
         {
             if (selectedPanel == null) return;
 
+            
             // Crear nuevo SplitContainer
             SplitContainer splitContainer = new SplitContainer
             {
@@ -83,6 +150,8 @@ namespace G85MultiTerm
 
             // Actualizar la referencia del panel seleccionado
             selectedPanel = newPanel;
+            
+            panelIndex++;
         }
 
         private void CloseSelectedPanel()
@@ -111,6 +180,7 @@ namespace G85MultiTerm
             parentOfsplitContainerOfSelectedPanel.Controls.Add(panelToKeep);
 
             selectedPanel = panelToKeep as Panel;
+            panelIndex--;
         }
 
         private Panel CreateNewPanel()
@@ -125,21 +195,18 @@ namespace G85MultiTerm
             panel.MouseClick += Panel_MouseClick;
 
             totalButtons++;
-            /*Button initialButton = new Button
-            {
-                Text = "Button : " + Convert.ToString(totalButtons),
-            };*/
+            
 
             Cmd cmd = new Cmd();
             cmd.Tag = totalButtons;
             cmd.Dock = DockStyle.Fill;
             cmd.Tag = "cmd_" + Convert.ToString(totalButtons);
 
-            cmdList.Add(totalButtons);
-
             panel.Controls.Add(cmd);
             return panel;
         }
+
+        
 
         private void Panel_MouseClick(object sender, MouseEventArgs e)
         {
