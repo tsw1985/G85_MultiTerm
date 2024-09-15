@@ -70,6 +70,9 @@ namespace G85MultiTerm
                 Cmd cmd = (Cmd)cmdList[cursorFocusCmdIndex];
                 if (cmd != null)
                 {
+
+                    MainForm.selectedCmd = cmd;
+
                     TextBox cmdCommands = (TextBox)cmd.Controls[0].Controls[1].Controls[0];
                     cmdCommands.BackColor = System.Drawing.Color.Green;
                     cmdCommands.Refresh();
@@ -93,6 +96,9 @@ namespace G85MultiTerm
                 Cmd cmd = (Cmd)cmdList[cursorFocusCmdIndex];
                 if (cmd != null)
                 {
+
+                    MainForm.selectedCmd = cmd;
+
                     TextBox cmdCommands = (TextBox)cmd.Controls[0].Controls[1].Controls[0];
                     cmdCommands.BackColor = System.Drawing.Color.Green;
                     cmdCommands.Refresh();
@@ -167,7 +173,31 @@ namespace G85MultiTerm
             parentOfsplitContainerOfSelectedPanel.Controls.Add(panelToKeep);
 
             selectedPanel = panelToKeep as Panel;
+            if (selectedPanel != null)
+            {
+                //set focus on current cmd
+                Cmd cmd = selectedPanel.Controls[0] as Cmd;
+                if (cmd != null)
+                {
+                    SplitContainer splitContainer = cmd.Controls[0] as SplitContainer;
+                    if (splitContainer != null)
+                    {
+                        TextBox cmdCommandTextBoxPanel2 = splitContainer.Panel2.Controls[0] as TextBox;
+                        if (cmdCommandTextBoxPanel2 != null)
+                        {
+                            cmdCommandTextBoxPanel2.Focus();
+                        }
 
+
+                        /*TextBox cmdCommandTextBoxPanel2 = splitContainer.Panel1.Controls[1] as TextBox;
+                        if (cmdCommandTextBoxPanel2 != null)
+                        {
+                            cmdCommandTextBoxPanel2.Focus();
+                        }*/
+
+                    }
+                }
+            }
         }
 
         private Panel CreateNewPanel()
