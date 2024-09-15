@@ -55,27 +55,30 @@ namespace G85MultiTerm
             else if (keyData == (Keys.Control | Keys.Shift | Keys.Up)) //arrow up
             {
                 cursorFocusCmdIndex--;
-                int index = 0;
-                if (cursorFocusCmdIndex > 0)
+
+                if (cursorFocusCmdIndex == cmdList.Count - 1)
                 {
-                    index = cursorFocusCmdIndex - 1;
+                    cursorFocusCmdIndex--;
                 }
+
+
 
                 if (cursorFocusCmdIndex < 0)
                 {
                     cursorFocusCmdIndex = 0;
                 }
 
-                if(index < 0)
-                {
-                    index = 0;
-                }
+                
 
-                Cmd cmd = (Cmd)cmdList[index];
+                Cmd cmd = (Cmd)cmdList[cursorFocusCmdIndex];
                 if (cmd != null)
                 {
-                    cmd.Controls[0].Controls[1].Controls[0].Focus();
-                    
+                    TextBox cmdCommands = (TextBox)cmd.Controls[0].Controls[1].Controls[0];
+                    cmdCommands.BackColor = System.Drawing.Color.Red;
+                    System.Threading.Thread.Sleep(1000);
+                    cmdCommands.BackColor = System.Drawing.Color.White;
+                    cmdCommands.Focus();
+
                 }
 
     
@@ -85,21 +88,19 @@ namespace G85MultiTerm
             {
                 int index = 0;
                 cursorFocusCmdIndex++;
-                if(cursorFocusCmdIndex >= cmdList.Count)
+                if (cursorFocusCmdIndex >= cmdList.Count)
                 {
                     cursorFocusCmdIndex = cmdList.Count - 1;
                 }
 
-                if(cursorFocusCmdIndex < cmdList.Count)
-                {
-                    index = cursorFocusCmdIndex;
-                }
-                
-
-                Cmd cmd = (Cmd)cmdList[index];
+                Cmd cmd = (Cmd)cmdList[cursorFocusCmdIndex];
                 if (cmd != null)
                 {
-                    cmd.Controls[0].Controls[1].Controls[0].Focus();
+                    TextBox cmdCommands = (TextBox)cmd.Controls[0].Controls[1].Controls[0];
+                    cmdCommands.BackColor = System.Drawing.Color.Red;
+                    System.Threading.Thread.Sleep(1000);
+                    cmdCommands.BackColor = System.Drawing.Color.White;
+                    cmdCommands.Focus();
 
                 }
 
