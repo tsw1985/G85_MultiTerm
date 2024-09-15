@@ -129,7 +129,8 @@ namespace G85MultiTerm
             // 
             // commandTextBox
             // 
-            this.commandTextBox.Location = new System.Drawing.Point(3, 3);
+            this.commandTextBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.commandTextBox.Location = new System.Drawing.Point(0, 0);
             this.commandTextBox.Name = "commandTextBox";
             this.commandTextBox.Size = new System.Drawing.Size(1337, 20);
             this.commandTextBox.TabIndex = 0;

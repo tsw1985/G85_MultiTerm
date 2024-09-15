@@ -74,9 +74,11 @@ namespace G85MultiTerm
                 if (cmd != null)
                 {
                     TextBox cmdCommands = (TextBox)cmd.Controls[0].Controls[1].Controls[0];
-                    cmdCommands.BackColor = System.Drawing.Color.Red;
-                    System.Threading.Thread.Sleep(1000);
+                    cmdCommands.BackColor = System.Drawing.Color.Green;
+                    cmdCommands.Refresh();
+                    System.Threading.Thread.Sleep(150);
                     cmdCommands.BackColor = System.Drawing.Color.White;
+                    cmdCommands.Refresh();
                     cmdCommands.Focus();
 
                 }
@@ -97,9 +99,11 @@ namespace G85MultiTerm
                 if (cmd != null)
                 {
                     TextBox cmdCommands = (TextBox)cmd.Controls[0].Controls[1].Controls[0];
-                    cmdCommands.BackColor = System.Drawing.Color.Red;
-                    System.Threading.Thread.Sleep(1000);
+                    cmdCommands.BackColor = System.Drawing.Color.Green;
+                    cmdCommands.Refresh();
+                    System.Threading.Thread.Sleep(150);
                     cmdCommands.BackColor = System.Drawing.Color.White;
+                    cmdCommands.Refresh();
                     cmdCommands.Focus();
 
                 }
