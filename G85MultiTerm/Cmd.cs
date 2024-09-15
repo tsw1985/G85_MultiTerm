@@ -39,6 +39,7 @@ namespace G85MultiTerm
         private void SelectParentPanel()
         {
             MainForm.selectedPanel = (Panel)this.Parent;
+            MainForm.selectedCmd = (Cmd)this;
         }
 
         private void InitializeCmdProcess()

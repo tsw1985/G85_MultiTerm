@@ -50,7 +50,6 @@ namespace G85MultiTerm
                 CloseSelectedPanel();
                 totalCmds--;
                 cursorFocusCmdIndex = totalCmds;
-                cmdList.Remove(selectedCmd);
                 return true;
             }
             else if (keyData == (Keys.Control | Keys.Shift | Keys.Up)) //arrow up
@@ -93,7 +92,7 @@ namespace G85MultiTerm
                     cursorFocusCmdIndex = cmdList.Count - 1;
                 }
 
-                Cmd cmd = (Cmd)cmdList[cursorFocusCmdIndex];
+                    Cmd cmd = (Cmd)cmdList[cursorFocusCmdIndex];
                 if (cmd != null)
                 {
 
@@ -151,6 +150,13 @@ namespace G85MultiTerm
         {
             if (selectedPanel == null) return;
 
+            Cmd cmdToRemove = selectedPanel.Controls[0] as Cmd;
+            if (cmdToRemove != null)
+            {
+                cmdList.Remove(cmdToRemove);
+            }
+
+
             SplitContainer splitContainerOfSelectedPanel = selectedPanel.Parent.Parent as SplitContainer;
             if (splitContainerOfSelectedPanel == null) return;
 
@@ -187,14 +193,6 @@ namespace G85MultiTerm
                         {
                             cmdCommandTextBoxPanel2.Focus();
                         }
-
-
-                        /*TextBox cmdCommandTextBoxPanel2 = splitContainer.Panel1.Controls[1] as TextBox;
-                        if (cmdCommandTextBoxPanel2 != null)
-                        {
-                            cmdCommandTextBoxPanel2.Focus();
-                        }*/
-
                     }
                 }
             }
