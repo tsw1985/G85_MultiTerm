@@ -61,8 +61,6 @@ namespace G85MultiTerm
                     cursorFocusCmdIndex--;
                 }
 
-
-
                 if (cursorFocusCmdIndex < 0)
                 {
                     cursorFocusCmdIndex = 0;
@@ -80,9 +78,7 @@ namespace G85MultiTerm
                     cmdCommands.BackColor = System.Drawing.Color.White;
                     cmdCommands.Refresh();
                     cmdCommands.Focus();
-
                 }
-
     
                 
             }

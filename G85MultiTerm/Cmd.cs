@@ -26,7 +26,17 @@ namespace G85MultiTerm
             this.selectedPanel = selectedPanel;
         }
 
-        private void responseCommandTextBox_Click(object sender, EventArgs e)
+        private void ResponseCommandTextBox_Click(object sender, EventArgs e)
+        {
+            SelectParentPanel();
+        }
+
+        private void CommandTextBox_Enter(object sender, EventArgs e)
+        {
+            SelectParentPanel();
+        }
+
+        private void SelectParentPanel()
         {
             MainForm.selectedPanel = (Panel)this.Parent;
         }
@@ -61,7 +71,7 @@ namespace G85MultiTerm
             }
         }
 
-        private void commandTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void CommandTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -125,7 +135,7 @@ namespace G85MultiTerm
             this.responseCommandTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.responseCommandTextBox.Size = new System.Drawing.Size(1343, 610);
             this.responseCommandTextBox.TabIndex = 0;
-            this.responseCommandTextBox.Click += new System.EventHandler(this.responseCommandTextBox_Click);
+            this.responseCommandTextBox.Click += new System.EventHandler(this.ResponseCommandTextBox_Click);
             // 
             // commandTextBox
             // 
@@ -134,7 +144,8 @@ namespace G85MultiTerm
             this.commandTextBox.Name = "commandTextBox";
             this.commandTextBox.Size = new System.Drawing.Size(1337, 20);
             this.commandTextBox.TabIndex = 0;
-            this.commandTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.commandTextBox_KeyDown);
+            this.commandTextBox.Enter += new System.EventHandler(this.CommandTextBox_Enter);
+            this.commandTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommandTextBox_KeyDown);
             // 
             // Cmd
             // 
@@ -150,9 +161,6 @@ namespace G85MultiTerm
             this.ResumeLayout(false);
 
         }
-
-
-
 
         
     }
