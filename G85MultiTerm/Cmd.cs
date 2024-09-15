@@ -39,6 +39,7 @@ namespace G85MultiTerm
         private void SelectParentPanel()
         {
             MainForm.selectedPanel = (Panel)this.Parent;
+            MainForm.selectedCmd = (Cmd)this;
         }
 
         private void InitializeCmdProcess()
@@ -139,10 +140,10 @@ namespace G85MultiTerm
             // 
             // commandTextBox
             // 
-            this.commandTextBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.commandTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.commandTextBox.Location = new System.Drawing.Point(0, 0);
             this.commandTextBox.Name = "commandTextBox";
-            this.commandTextBox.Size = new System.Drawing.Size(1337, 20);
+            this.commandTextBox.Size = new System.Drawing.Size(1343, 20);
             this.commandTextBox.TabIndex = 0;
             this.commandTextBox.Enter += new System.EventHandler(this.CommandTextBox_Enter);
             this.commandTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CommandTextBox_KeyDown);

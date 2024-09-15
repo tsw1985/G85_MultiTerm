@@ -9,6 +9,7 @@ namespace G85MultiTerm
     public partial class MainForm : Form
     {
         public static Panel selectedPanel;
+        public static Cmd selectedCmd;
         private ArrayList cmdList = new ArrayList();
 
         private int totalCmds = 0;
@@ -49,7 +50,7 @@ namespace G85MultiTerm
                 CloseSelectedPanel();
                 totalCmds--;
                 cursorFocusCmdIndex = totalCmds;
-                cmdList.Remove(totalCmds);
+                cmdList.Remove(selectedCmd);
                 return true;
             }
             else if (keyData == (Keys.Control | Keys.Shift | Keys.Up)) //arrow up
@@ -65,8 +66,6 @@ namespace G85MultiTerm
                 {
                     cursorFocusCmdIndex = 0;
                 }
-
-                
 
                 Cmd cmd = (Cmd)cmdList[cursorFocusCmdIndex];
                 if (cmd != null)
@@ -107,58 +106,6 @@ namespace G85MultiTerm
             }
             
             return base.ProcessCmdKey(ref msg, keyData);
-        }
-
-
-        private void SetFocusOnCmd(Control mainWindow , int index)
-        {
-            if (mainWindow != null)
-            {
-                foreach(Control child in mainWindow.Controls)
-                {
-                    if (child != null && child is SplitContainer)
-                    {
-
-                        SplitContainer splitcontainerParent = (SplitContainer)child;
-                        if(splitcontainerParent != null)
-                        {
-                            
-                            Panel panel1 = splitcontainerParent.Panel1 as Panel;
-                            if (panel1 != null)
-                            {
-                                SetFocusOnCmd(panel1, index);
-                                
-                                if (panel1.Controls[0] != null && panel1.Controls[0].Controls[0] != null)
-                                {
-                                    Cmd cmdChild = panel1.Controls[0].Controls[0] as Cmd;
-                                    if (cmdChild != null && cmdChild.Tag.Equals("cmd_" + index.ToString()))
-                                    {
-                                        cmdChild.Controls[0].Controls[1].Controls[0].Focus();
-                                        Debug.WriteLine("CMD founded in Panel 1 - TAG  : " + cmdChild.Tag);
-                                    }
-                                }
-                            }
-
-                            Panel panel2 = splitcontainerParent.Panel2 as Panel;
-                            if (panel2 != null)
-                            {
-
-                                SetFocusOnCmd(panel2, index);
-
-                                if (panel2.Controls[0] != null && panel2.Controls[0].Controls[0] != null)
-                                {
-                                    Cmd cmdChild = panel2.Controls[0].Controls[0] as Cmd;
-                                    if (cmdChild != null && cmdChild.Tag.Equals("cmd_" + index.ToString()))
-                                    {
-                                        cmdChild.Controls[0].Controls[1].Controls[0].Focus();
-                                        Debug.WriteLine("CMD founded in Panel 2 - TAG  : " + cmdChild.Tag);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         private void SplitSelectedPanel(Orientation orientation)
