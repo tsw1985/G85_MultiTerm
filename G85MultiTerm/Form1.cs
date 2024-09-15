@@ -33,11 +33,13 @@ namespace G85MultiTerm
             if (keyData == (Keys.Control | Keys.Shift | Keys.E))
             {
                 SplitSelectedPanel(Orientation.Vertical);
+                totalCmds++;
                 return true;
             }
             else if (keyData == (Keys.Control | Keys.Shift | Keys.O))
             {
                 SplitSelectedPanel(Orientation.Horizontal);
+                totalCmds++;
                 return true;
             }
             else if (keyData == (Keys.Control | Keys.Shift | Keys.Up)) //arrow up
@@ -69,6 +71,7 @@ namespace G85MultiTerm
             else if (keyData == (Keys.Control | Keys.Shift | Keys.W))
             {
                 CloseSelectedPanel();
+                totalCmds--;
                 return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);
@@ -193,7 +196,7 @@ namespace G85MultiTerm
             parentOfsplitContainerOfSelectedPanel.Controls.Add(panelToKeep);
 
             selectedPanel = panelToKeep as Panel;
-            totalCmds--;
+            //totalCmds--;
         }
 
         private Panel CreateNewPanel()
@@ -214,7 +217,7 @@ namespace G85MultiTerm
             panel.Controls.Add(cmd);
 
 
-            totalCmds++;
+            //totalCmds++;
 
             return panel;
         }
