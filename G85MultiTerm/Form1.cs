@@ -209,18 +209,12 @@ namespace G85MultiTerm
 
             panel.MouseClick += Panel_MouseClick;
 
-            
             Cmd cmd = new Cmd(totalCmds, selectedPanel);
             cmd.Dock = DockStyle.Fill;
-            cmd.Tag = "cmd_" + Convert.ToString(totalCmds);
             panel.Controls.Add(cmd);
-
-
             cmdList.Add(cmd);
-
             return panel;
         }
-
         
 
         private void Panel_MouseClick(object sender, MouseEventArgs e)

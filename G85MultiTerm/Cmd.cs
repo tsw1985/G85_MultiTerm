@@ -162,8 +162,5 @@ namespace G85MultiTerm
             this.ResumeLayout(false);
 
         }
-
-        
     }
 }
-
