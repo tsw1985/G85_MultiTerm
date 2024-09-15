@@ -56,9 +56,7 @@ namespace G85MultiTerm
                     responseCommandTextBox.AppendText(e.Data + Environment.NewLine);
                     commandTextBox.Text = "";
                     commandTextBox.Focus();
-
-                    commandTextBox.Text = "CMD N - " + index;
-
+                    //commandTextBox.Text = "CMD N - " + index;
                 }));
             }
         }
@@ -151,6 +149,9 @@ namespace G85MultiTerm
             this.ResumeLayout(false);
 
         }
+
+
+
 
         
     }

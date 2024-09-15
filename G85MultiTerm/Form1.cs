@@ -34,53 +34,83 @@ namespace G85MultiTerm
             {
                 SplitSelectedPanel(Orientation.Vertical);
                 totalCmds++;
+                cursorFocusCmdIndex = totalCmds;
                 return true;
             }
             else if (keyData == (Keys.Control | Keys.Shift | Keys.O))
             {
                 SplitSelectedPanel(Orientation.Horizontal);
                 totalCmds++;
+                cursorFocusCmdIndex = totalCmds;
                 return true;
-            }
-            else if (keyData == (Keys.Control | Keys.Shift | Keys.Up)) //arrow up
-            {
-                SetFocusOnCmd(this , cursorFocusCmdIndex);
-                if (cursorFocusCmdIndex >= 0)
-                {
-                    cursorFocusCmdIndex--;
-                }
-                else
-                {
-                    cursorFocusCmdIndex = 0;
-                }
-                
-            }
-            else if (keyData == (Keys.Control | Keys.Shift | Keys.Down)) //arrow down
-            {
-                SetFocusOnCmd(this , cursorFocusCmdIndex);
-                if (cursorFocusCmdIndex <= totalCmds)
-                {
-                    cursorFocusCmdIndex++;
-                }
-                else
-                {
-                    cursorFocusCmdIndex = totalCmds;
-                }
-                
             }
             else if (keyData == (Keys.Control | Keys.Shift | Keys.W))
             {
                 CloseSelectedPanel();
                 totalCmds--;
+                cursorFocusCmdIndex = totalCmds;
+                cmdList.Remove(totalCmds);
                 return true;
             }
+            else if (keyData == (Keys.Control | Keys.Shift | Keys.Up)) //arrow up
+            {
+                cursorFocusCmdIndex--;
+                int index = 0;
+                if (cursorFocusCmdIndex > 0)
+                {
+                    index = cursorFocusCmdIndex - 1;
+                }
+
+                if (cursorFocusCmdIndex < 0)
+                {
+                    cursorFocusCmdIndex = 0;
+                }
+
+                if(index < 0)
+                {
+                    index = 0;
+                }
+
+                Cmd cmd = (Cmd)cmdList[index];
+                if (cmd != null)
+                {
+                    cmd.Controls[0].Controls[1].Controls[0].Focus();
+                    
+                }
+
+    
+                
+            }
+            else if (keyData == (Keys.Control | Keys.Shift | Keys.Down)) //arrow down
+            {
+                int index = 0;
+                cursorFocusCmdIndex++;
+                if(cursorFocusCmdIndex >= cmdList.Count)
+                {
+                    cursorFocusCmdIndex = cmdList.Count - 1;
+                }
+
+                if(cursorFocusCmdIndex < cmdList.Count)
+                {
+                    index = cursorFocusCmdIndex;
+                }
+                
+
+                Cmd cmd = (Cmd)cmdList[index];
+                if (cmd != null)
+                {
+                    cmd.Controls[0].Controls[1].Controls[0].Focus();
+
+                }
+
+            }
+            
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
 
         private void SetFocusOnCmd(Control mainWindow , int index)
         {
-
             if (mainWindow != null)
             {
                 foreach(Control child in mainWindow.Controls)
@@ -92,12 +122,10 @@ namespace G85MultiTerm
                         if(splitcontainerParent != null)
                         {
                             
-
                             Panel panel1 = splitcontainerParent.Panel1 as Panel;
                             if (panel1 != null)
                             {
                                 SetFocusOnCmd(panel1, index);
-                                //Debug.WriteLine("Split container tag " + splitcontainerParent.Tag);
                                 
                                 if (panel1.Controls[0] != null && panel1.Controls[0].Controls[0] != null)
                                 {
@@ -106,7 +134,6 @@ namespace G85MultiTerm
                                     {
                                         cmdChild.Controls[0].Controls[1].Controls[0].Focus();
                                         Debug.WriteLine("CMD founded in Panel 1 - TAG  : " + cmdChild.Tag);
-                                        //break;
                                     }
                                 }
                             }
@@ -116,7 +143,7 @@ namespace G85MultiTerm
                             {
 
                                 SetFocusOnCmd(panel2, index);
-                                //Debug.WriteLine("Split container tag " + splitcontainerParent.Tag);
+
                                 if (panel2.Controls[0] != null && panel2.Controls[0].Controls[0] != null)
                                 {
                                     Cmd cmdChild = panel2.Controls[0].Controls[0] as Cmd;
@@ -124,15 +151,11 @@ namespace G85MultiTerm
                                     {
                                         cmdChild.Controls[0].Controls[1].Controls[0].Focus();
                                         Debug.WriteLine("CMD founded in Panel 2 - TAG  : " + cmdChild.Tag);
-                                        //break;
                                     }
                                 }
-                                
                             }
                         }
-
                     }
-                    
                 }
             }
         }
@@ -196,7 +219,7 @@ namespace G85MultiTerm
             parentOfsplitContainerOfSelectedPanel.Controls.Add(panelToKeep);
 
             selectedPanel = panelToKeep as Panel;
-            //totalCmds--;
+
         }
 
         private Panel CreateNewPanel()
@@ -217,7 +240,7 @@ namespace G85MultiTerm
             panel.Controls.Add(cmd);
 
 
-            //totalCmds++;
+            cmdList.Add(cmd);
 
             return panel;
         }
